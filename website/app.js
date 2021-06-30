@@ -18,7 +18,8 @@ function generateWeather(e){
     const postCode = document.getElementById('zip').value;
     const feeling = document.getElementById('feelings').value;
     //Get weather data for designated postcode
-    retrieveWeather(apiURL, apiKey, postCode)
+    //As per mentor instructions - "method retrieveWeather should have parameter sequence as `apiURL`, `postCode` and `apiKey`"
+    retrieveWeather(apiURL, postCode, apiKey)
     .then(function(data){
       console.log(data);
     // Add all data into POST request
