@@ -1,12 +1,10 @@
 /* Global Variables */
 //Api key for openwaether map
-const apiKey = "f8ae02d4b84e215e99bf8ad3f07b07a9";
+const apiKey = "&appid=f8ae02d4b84e215e99bf8ad3f07b07a9";
 //base url for open weather map
-const apiURL = 'http://api.openweathermap.org/data/2.5/weather?q=';
-//converticing to appropriate metric system
-const units = '&units=metric';
+const apiURL = 'http://api.openweathermap.org/data/2.5/weather?';
 
-// Create a new date instance dynamically with JS
+//had these in wrong order
 let date = new Date();
 let newDate = date.getDate()+'.'+ date.getMonth()+'.'+ date.getFullYear();
 
@@ -14,42 +12,43 @@ let newDate = date.getDate()+'.'+ date.getMonth()+'.'+ date.getFullYear();
 document.getElementById('generate').addEventListener('click', generateWeather);
 
 function generateWeather(e){
-    // Get input data from form data to include in the POST
-    const feeling = document.getElementById('feelings').value;
+    // Get input data to include in the POST
+    //can't use let, need to use const (not for going forward)
     const postCode = document.getElementById('zip').value;
-    console.log('Users postcode is '+ postCode)
-
+    const feeling = document.getElementById('feelings').value;
     //Get weather data for designated postcode
-    newInput(apiURL,postCode,apiKey,units)
-
+    retrieveWeather(apiURL, apiKey, postCode)
     .then(function(data){
       console.log(data);
     // Add all data into POST request
-        postData('/all', {temp:data.main.temp, dttm:newDate, zip:postCode, feeling:feeling});
-    }) .then( () =>{
-        postUpdates()
-     })
-    };
-
-//GET data from WEB API using ASYNC
-    const newInput = async (apiURL, zip, apiKey, units)=>{
-      console.log('New Input', {apiURL, zip, apiKey, units})
-      const response = await fetch(apiURL+zip+apiKey+units) // await until all data is received from API call, then try
-      try { // If fetch goes well
-        const data = await response.json(); // Return data as JSON
-        return data;
-      }  catch(error) { //If fetch goes wrong then error.
-        console.log("error", error);
-        // appropriately handle the error
-      }
+        postData('/all', {temp:data.main.temp, date:newDate, feeling:feelings});
+        //run userView function
+    })
+      .then( () => userView());
     }
 
-//POST DATA function
+//get data from weather API
+const retrieveWeather = async (apiURL, zip, apiKey)=>{
+          const request = await fetch(apiURL + zip + apiKey) // await until all data is received from API call, then try
+          try {
+            const data = await response.json(); // Return data as JSON
+            return data;
+          }
+          //catch any potential errors that arise and output results in console
+          catch(error) {
+            console.log("error", error);
+          }
+        }
+
+//Displaying final outcome of data
 const postData = async ( apiURL = '', data = {})=>{
       const response = await fetch(apiURL, {
+      //post data
       method: 'POST',
+      //set credentials
       credentials: 'same-origin',
       headers: {
+        //define content type as JSON
           'Content-Type': 'application/json',
       },
      // Body data type must match "Content-Type" header
@@ -59,21 +58,25 @@ const postData = async ( apiURL = '', data = {})=>{
       try {
         const newData = await response.json();
         return newData;
-      }catch(error) {
+      }
+      //catch any potential errors that arise and output results in console
+      catch(error) {
       console.log("error", error);
       }
   }
 
-  //CODE TO UPDATE UI
-  const postUpdates = async()=>{
-        const entries = await fetch('/all');
-        try{
-            const projectData = await entries.json();
-            document.getElementById('date').innerHTML = `The date today is: ${projectData.dttm}`;
-            document.getElementById('temp').innerHTML = `The temperature is currently: ${projectData.temp}c in ${projectData.zip}`;
-            document.getElementById('content').innerHTML = `The weather is making me feel: ${projectData.feeling}`;
-        }
-        //catch any potential error that may be thrown
-        catch(err){
-            console.log('Error posting data ' + err);
-        }}
+//post data
+const userView = async()=>{
+      const entries = await fetch('/all');
+          //try
+          try{
+              const projectData = await entries.json();
+              //output user results onto web-page
+              document.querySelector('date').innerHTML = "The date today is: " + projectData.date;
+              document.querySelector('temp').innerHTML = "The temperature is currently: " + projectData.temp;
+              document.querySelector('content').innerHTML = "The weather is making me feel:" + projectData.feelings;
+            }
+          //catch any potential errors that arise and output results in console
+          catch(err){
+             console.log('Error posting data ' + err);
+      }}
