@@ -40,7 +40,6 @@ function listening(){
 //app.get('/', function (req, res) {
   //res.send('hello world');
 //})
-
 app.get('/all', getData);
 
 function getData (request, response){
@@ -48,9 +47,9 @@ function getData (request, response){
     console.log(projectData);
 };
 
-//post all
-app.post('/all', postData);
+app.post('/add', postData);
 
+//post all
 function postData (request, response) {
 
     let data = request.body;
