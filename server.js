@@ -16,9 +16,10 @@ app.use(express.static('website'));
 
 //global variable for bodyParser
 const bodyParser = require('body-parser');
-//Here we are configuring express to use body-parser as middle-ware.
+//Configuring express to use body-parser as middle-ware.
 app.use(bodyParser.urlencoded({ extended: false }));
 
+//Configuring express to use cors.
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -47,18 +48,19 @@ function getData (request, response){
     console.log(projectData);
 };
 
+//post all
 app.post('/all', postData);
 
 function postData (request, response) {
 
     let data = request.body;
 
-console.log('POST Update to server ', data);
+    console.log('POST Update to server ', data);
 
-projectData["dttm"] = data.dttm;
-projectData["temp"] = data.temp;
-projectData["feeling"] = data.feeling;
-projectData["zip"] = data.location;
+    projectData['temp'] = data.temp;
+    projectData['date'] = data.date;
+    projectData['feelings'] = data.feelings;
 
-response.send(projectData);
+    //send project data
+    response.send(projectData);
 };
