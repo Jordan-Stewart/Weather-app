@@ -74,6 +74,7 @@ const userView = async()=>{
           try{
               const projectData = await entries.json();
               //output user results onto web-page
+              //as per mentor instructions - Since in the method `userView`, you are using `querySelector`. So, for them we have to make use of `#date` as the format for fetching HTML element.
               document.querySelector('#date').innerHTML = "The date today is: " + projectData.date;
               document.querySelector('#temp').innerHTML = "The temperature is currently: " + projectData.temp;
               document.querySelector('#content').innerHTML = "The weather is making me feel:" + projectData.feelings;
