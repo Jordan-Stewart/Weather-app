@@ -22,7 +22,7 @@ function generateWeather(e){
     .then(function(data){
       console.log(data);
     // Add all data into POST request
-        postData('/all', {temp:data.main.temp, date:newDate, feeling:feelings});
+        postData('/add', {temp:data.main.temp, date:newDate, feelings:feeling});
         //run userView function
     })
       .then( () => userView());
@@ -73,9 +73,9 @@ const userView = async()=>{
           try{
               const projectData = await entries.json();
               //output user results onto web-page
-              document.querySelector('date').innerHTML = "The date today is: " + projectData.date;
-              document.querySelector('temp').innerHTML = "The temperature is currently: " + projectData.temp;
-              document.querySelector('content').innerHTML = "The weather is making me feel:" + projectData.feelings;
+              document.querySelector('#date').innerHTML = "The date today is: " + projectData.date;
+              document.querySelector('#temp').innerHTML = "The temperature is currently: " + projectData.temp;
+              document.querySelector('#content').innerHTML = "The weather is making me feel:" + projectData.feelings;
             }
           //catch any potential errors that arise and output results in console
           catch(err){
