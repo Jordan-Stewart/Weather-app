@@ -2,7 +2,8 @@
 //Api key for openwaether map
 const apiKey = "&appid=f8ae02d4b84e215e99bf8ad3f07b07a9";
 //base url for open weather map
-const apiURL = 'http://api.openweathermap.org/data/2.5/weather?';
+//as per mentor instructions -- "We need to append `zip` as a query parameter in our `apiURL`"
+const apiURL = 'http://api.openweathermap.org/data/2.5/weather?zip=';
 
 //had these in wrong order
 let date = new Date();
