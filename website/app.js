@@ -30,10 +30,12 @@ function generateWeather(e){
     }
 
 //get data from weather API
+//as per mentor instruction
 const retrieveWeather = async (apiURL, zip, apiKey)=>{
           const request = await fetch(apiURL + zip + apiKey) // await until all data is received from API call, then try
           try {
-            const data = await response.json(); // Return data as JSON
+            // request is the variable and not the response
+            const data = await request.json(); // Return data as JSON
             return data;
           }
           //catch any potential errors that arise and output results in console
@@ -41,6 +43,7 @@ const retrieveWeather = async (apiURL, zip, apiKey)=>{
             console.log("error", error);
           }
         }
+
 
 //Displaying final outcome of data
 const postData = async ( apiURL = '', data = {})=>{
