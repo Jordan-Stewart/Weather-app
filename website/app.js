@@ -3,7 +3,7 @@
 const apiKey = "&appid=f8ae02d4b84e215e99bf8ad3f07b07a9";
 //base url for open weather map
 //as per mentor instructions -- https://knowledge.udacity.com/questions/629283
-const apiURL = 'https://api.openweathermap.org/data/2.5/weather?zip=2031,au';
+const apiURL = 'https://api.openweathermap.org/data/2.5/weather?zip=2031,au&units=metric';
 
 //had these in wrong order
 let date = new Date();
