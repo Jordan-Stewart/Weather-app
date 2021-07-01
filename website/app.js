@@ -23,6 +23,7 @@ function generateWeather(e){
     .then(function(data){
       console.log(data);
     // Add all data into POST request
+        //The call to method `postData` should have endpoint name as `/add` -- as per mentor instruction https://knowledge.udacity.com/questions/629283
         postData('/add', {temp:data.main.temp, date:newDate, feelings:feeling});
         //run userView function
     })
@@ -36,7 +37,7 @@ function generateWeather(e){
   }
 
 //get data from weather API
-//as per mentor instruction
+//as per mentor instruction method retrieveWeather should have parameter sequence as `apiURL`, `postCode` and `apiKey` - https://knowledge.udacity.com/questions/629283
 const retrieveWeather = async (apiURL, zip, apiKey)=>{
           const request = await fetch(apiURL + zip + apiKey) // await until all data is received from API call, then try
           try {
@@ -83,7 +84,7 @@ const userView = async()=>{
           try{
               const projectData = await entries.json();
               //output user results onto web-page
-              //as per mentor instructions - Since in the method `userView`, you are using `querySelector`. So, for them we have to make use of `#date` as the format for fetching HTML element.
+              //as per mentor instructions - Since in the method `userView`, you are using `querySelector`. So, for them we have to make use of `#date` as the format for fetching HTML element -- https://knowledge.udacity.com/questions/629283
               document.querySelector('#date').innerHTML = "The date today is: " + projectData.date;
               document.querySelector('#temp').innerHTML = "The temperature is currently: " + projectData.temp;
               document.querySelector('#content').innerHTML = "The weather is making me feel:" + projectData.feelings;
