@@ -1,5 +1,6 @@
 /* Global Variables */
 //Api key for openwaether map
+//as per mentor instruction - You have not concatenated the zip code and key correctly due to which it is throwing validation saying invalid key and not returning any response. - https://knowledge.udacity.com/questions/627330
 const apiKey = "&appid=f8ae02d4b84e215e99bf8ad3f07b07a9";
 //base url for open weather map
 //as per mentor instructions -- https://knowledge.udacity.com/questions/629283
