@@ -2,8 +2,8 @@
 //Api key for openwaether map
 const apiKey = "&appid=f8ae02d4b84e215e99bf8ad3f07b07a9";
 //base url for open weather map
-//as per mentor instructions -- "We need to append `zip` as a query parameter in our `apiURL`"
-const apiURL = 'http://api.openweathermap.org/data/2.5/weather?zip=';
+//as per mentor instructions -- https://knowledge.udacity.com/questions/629283
+const apiURL = 'https://api.openweathermap.org/data/2.5/weather?zip=2031,au';
 
 //had these in wrong order
 let date = new Date();
@@ -28,6 +28,12 @@ function generateWeather(e){
     })
       .then( () => userView());
     }
+
+  //validation function for zipCode as per mentor instructions -- https://knowledge.udacity.com/questions/629283
+  function validateZipCode(elementValue){
+    var zipCodePattern = /^(0[289][0-9]{2})|([123456789][0-9]{3})$/;
+    return zipCodePattern.test(elementValue);
+  }
 
 //get data from weather API
 //as per mentor instruction
