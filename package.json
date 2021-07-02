@@ -1,0 +1,32 @@
+{
+  "name": "npm-init-weatherapp",
+  "version": "1.0.0",
+  "description": "Assignment 3 for front-end web developer course",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jordan-Stewart/Weather-app.git"
+  },
+  "keywords": [
+    "weather",
+    "app",
+    "weather",
+    "app",
+    "assignment",
+    "3"
+  ],
+  "author": "Jordan Stewart",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/Jordan-Stewart/Weather-app/issues"
+  },
+  "homepage": "https://github.com/Jordan-Stewart/Weather-app#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  }
+}
