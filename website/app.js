@@ -9,7 +9,8 @@ const apiURL = 'https://api.openweathermap.org/data/2.5/weather?zip=2031,au&unit
 
 //had these in wrong order
 let date = new Date();
-let newDate = date.getDate()+'.'+ date.getMonth()+'.'+ date.getFullYear();
+//as per mentor support provided here: https://knowledge.udacity.com/questions/632462
+let newDate = d.getMonth() + 1 + '.' + d.getDate() + '.' + d.getFullYear();
 
 //when generate button is clicked, run generateWeather function
 document.getElementById('generate').addEventListener('click', generateWeather);
