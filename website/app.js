@@ -1,90 +1,52 @@
-//API key initialisation
-//API key for geonames
-const geonames_API = 'http://api.geonames.org/postalCodeSearchJSON?placename=';
-const geonames_ID = process.env.USERNAME;
-
-//API key for pixabay
-const pixabay_API = 'https://pixabay.com/api/?key=';
-const pixabay_ID = process.env.API_KEY_PIXABAY;
-
-//API key for weatherbit
-const weatherbit_API ='https://api.weatherbit.io/v2.0/current?';
-//const todays_forecast = 'https://api.weatherbit.io/v2.0/current?';
-//const future_forecast = 'http://api.weatherbit.io/v2.0/forecast/daily?'
-const weatherbit_id = process.env.API_KEY_WEATHERBIT;
+/* Global Variables */
+//Api key for openwaether map
+//as per mentor instruction - You have not concatenated the zip code and key correctly due to which it is throwing validation saying invalid key and not returning any response. - https://knowledge.udacity.com/questions/627330
+const apiKey = "&appid=f8ae02d4b84e215e99bf8ad3f07b07a9";
+//base url for open weather map
+//as per mentor instructions -- https://knowledge.udacity.com/questions/629283
+//&units=metric doesn't seem to convert retrieve data to celcius
+const apiURL = 'https://api.openweathermap.org/data/2.5/weather?zip=2031,au&units=metric';
 
 //had these in wrong order
 let date = new Date();
+//as per mentor support provided here: https://knowledge.udacity.com/questions/632462
+let newDate = d.getMonth() + 1 + '.' + d.getDate() + '.' + d.getFullYear();
 
-//when generate button is clicked, run generateTrip function
-document.getElementById('generate').addEventListener('click', generateTrip);
+//when generate button is clicked, run generateWeather function
+document.getElementById('generate').addEventListener('click', generateWeather);
 
-//fix generateTrip function as per mentor advice -- https://knowledge.udacity.com/questions/649604
-function generateTrip(e){
-    //retrieve elements entered by user
-    const date = document.getElementById('date').value;
-    const destination = document.getElementById('destination').value;
-    //const countdown = document.getElementById('countdown')
-    //calculation for time remaining until trip departure
-    var setDate = document.getElementById('date').value;
-    //getting todays date
-    var today = new Date();
-    //sourced from https://tecadmin.net/get-current-date-time-javascript/
-    var todaysDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-    //the following was sourced from https://www.geeksforgeeks.org/how-to-calculate-the-number-of-days-between-two-dates-in-javascript/
-    // To calculate the time difference of two dates
-    var Difference_In_Time = setDate.getTime() - todaysDate.getTime();
-    // To calculate the no. of days between two dates
-    const countdown = Difference_In_Time / (1000 * 3600 * 24);
-    //determine if forcast will be set for tomorrow or future set date
-    //if (date <= 1) {
-    //  weatherbit_API = todays_forecast;
-    //} else {
-    //  weatherbit_API = future_forecast;
-    //}
+function generateWeather(e){
+    // Get input data to include in the POST
+    //can't use let, need to use const (not for going forward)
+    const postCode = document.getElementById('zip').value;
+    const feeling = document.getElementById('feelings').value;
+    //Get weather data for designated postcode
+    //As per mentor instructions - "method retrieveWeather should have parameter sequence as `apiURL`, `postCode` and `apiKey`"
+    retrieveWeather(apiURL, postCode, apiKey)
+    .then(function(data){
+      console.log(data);
+    // Add all data into POST request
+        //The call to method `postData` should have endpoint name as `/add` -- as per mentor instruction https://knowledge.udacity.com/questions/629283
+        postData('/add', {temp:data.main.temp, date:newDate, feelings:feeling});
+        //run userView function
+    })
+      .then( () => userView());
+    }
 
-    //call retrieveDestination function
-    retrieveDestination(destination)
-      //upon succesful call, call retrieveWeather function
-      .then(function (data)) {
-        retrieveWeather(apiURL, data.geonames[0].lat,  data.geonames[0].lng, apiKey);
-        return data;
-      })
-      //upon succesful calls, call retrieveImage function
-      .then(function(data){
-        retrieveImage (pixabay_API, pixabay_ID, destination);
-        return data;
-      })
-      //post data
-      .then(function (data)) {
-        postData('/', {data: data.data, destination: destination, date: date, countdown: countdown})
-        return data;
-      })
+  //validation function for zipCode as per mentor instructions -- https://knowledge.udacity.com/questions/629283
+  function validateZipCode(elementValue){
+    var zipCodePattern = /^(0[289][0-9]{2})|([123456789][0-9]{3})$/;
+    return zipCodePattern.test(elementValue);
+  }
 
-    //call userView function
-    .then( () => userView(data.hits[0].imageURL));
-}
-
-
-//retrieveDestination function
-const retrieveDestination = async (destination) => {
-      const response = await fetch(geonames_API + destination + geonames_ID)
-      try {
-          const data = await response.json(); // Return data as JSON
-          return data;
-        }
-        //catch any potential errors that arise and output results in console
-        catch(error) {
-          console.log("error", error);
-        }
-      }
-
-//retrieveImage function
-const retrieveImage = async (pixabay_API, pixabay_ID, destination) => {
-      const response = await fetch(pixabay_API + pixabay_ID + '&q=' + place + '&category=places&image_type=photo')
-      try {
-          const data = await response.json(); // Return data as JSON
-          return data;
+//get data from weather API
+//as per mentor instruction method retrieveWeather should have parameter sequence as `apiURL`, `postCode` and `apiKey` - https://knowledge.udacity.com/questions/629283
+const retrieveWeather = async (apiURL, zip, apiKey)=>{
+          const request = await fetch(apiURL + zip + apiKey) // await until all data is received from API call, then try
+          try {
+            // request is the variable and not the response
+            const data = await request.json(); // Return data as JSON
+            return data;
           }
           //catch any potential errors that arise and output results in console
           catch(error) {
@@ -92,35 +54,22 @@ const retrieveImage = async (pixabay_API, pixabay_ID, destination) => {
           }
         }
 
-//retrieveImage function
-const retrieveWeather = async (destination, weatherbit_API, weatherbit_id) => {
-      const response = await fetch(weatherbit_API+'city='+destination+'&key='+weatherbit_id)
-      try {
-          const data = await response.json(); // Return data as JSON
-          return data;
-          }
-          //catch any potential errors that arise and output results in console
-          catch(error) {
-            console.log("error", error);
-          }
-        }
 
-//Displaying final outcome of destination data
-const postData= async ( url = '', data = {})=>{
-      //all of the following has been copied across from my third project
-      const response = await fetch('http://localhost:8080', {
+//Displaying final outcome of data
+const postData = async ( apiURL = '', data = {})=>{
+      const response = await fetch(apiURL, {
       //post data
       method: 'POST',
       //set credentials
       credentials: 'same-origin',
       headers: {
         //define content type as JSON
-        'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
       },
-      // Body data type must match "Content-Type" header
+     // Body data type must match "Content-Type" header
       body: JSON.stringify(data),
     });
-      //console.log(response);
+    //console.log(response);
       try {
         const newData = await response.json();
         return newData;
@@ -128,9 +77,8 @@ const postData= async ( url = '', data = {})=>{
       //catch any potential errors that arise and output results in console
       catch(error) {
       console.log("error", error);
-    }
+      }
   }
-
 
 //post data
 const userView = async()=>{
@@ -138,22 +86,11 @@ const userView = async()=>{
           //try
           try{
               const projectData = await entries.json();
-              //define variables
-              const destination = document.getElementById('destination').value;
-              const departure = document.getElementById('date').value;
-
-              // testing displaying geo API
-              const geoAPI = await retrieveDestination(destination);
-                 console.log(userData.lat);
-                 console.log(userData.long);
-                 console.log(userData.ctry);
-
-              userData.lat = geoAPI.lat;
-              userData.long = geoAPI.long;
-              userData.ctry = geoAPI.ctry;
-
-              //call countdown function for days remaining
-              //countdown (date);
+              //output user results onto web-page
+              //as per mentor instructions - Since in the method `userView`, you are using `querySelector`. So, for them we have to make use of `#date` as the format for fetching HTML element -- https://knowledge.udacity.com/questions/629283
+              document.querySelector('#date').innerHTML = "The date today is: " + projectData.date;
+              document.querySelector('#temp').innerHTML = "The temperature is currently: " + projectData.temp;
+              document.querySelector('#content').innerHTML = "The weather is making me feel:" + projectData.feelings;
             }
           //catch any potential errors that arise and output results in console
           catch(err){
